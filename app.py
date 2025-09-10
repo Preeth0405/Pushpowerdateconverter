@@ -18,6 +18,12 @@ interval_options = {
 }
 interval = st.selectbox("Select Time Interval", list(interval_options.keys()))
 
+# New option for output format
+format_option = st.radio(
+    "Select Output Format",
+    ["Date + Time in one column", "Date and Time in separate columns"]
+)
+
 # --- Generate Button ---
 if st.button("Generate Excel File"):
     if start_date and end_date:
@@ -31,12 +37,18 @@ if st.button("Generate Excel File"):
                 freq=interval_options[interval]
             )
 
-            # Format to dd/mm/yyyy HH:MM
-            df = pd.DataFrame({"DateTime": dt_range.strftime("%d/%m/%Y %H:%M")})
+            # Format DataFrame based on selection
+            if format_option == "Date + Time in one column":
+                df = pd.DataFrame({"DateTime": dt_range.strftime("%d/%m/%Y %H:%M")})
+            else:
+                df = pd.DataFrame({
+                    "Date": dt_range.strftime("%d/%m/%Y"),
+                    "Time": dt_range.strftime("%H:%M")
+                })
 
             # Save to Excel in memory
             output = BytesIO()
-            with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+            with pd.ExcelWriter(output, engine="openpyxl") as writer:  # safer default
                 df.to_excel(writer, index=False, sheet_name="DateTime")
 
             st.success("✅ Excel file generated!")
