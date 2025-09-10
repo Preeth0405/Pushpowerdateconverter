@@ -2,4 +2,5 @@ pandas
 streamlit
 numpy
 numpy-financial
+XlsxWriter
 plotly
