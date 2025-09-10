@@ -4,3 +4,4 @@ numpy
 numpy-financial
 XlsxWriter
 plotly
+openpyxl
