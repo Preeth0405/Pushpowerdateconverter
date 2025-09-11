@@ -34,7 +34,7 @@ if not st.session_state.authenticated:
     st.stop()
 
 # --- Glossary & How-to ---
-with st.expander("📖 Glossary & How-to", expanded=False):
+with st.sidebar.expander("📖 Glossary & How-to", expanded=False):
     st.markdown("""
     ## ⚡ Options
     - **Start Date / End Date:** Defines the date range.
