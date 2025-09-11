@@ -6,6 +6,54 @@ st.set_page_config(page_title="DateTime Excel Generator", layout="centered")
 
 st.title("📅 DateTime Excel Generator")
 
+with st.expander("📖 Glossary & How-to", expanded=False):
+    st.markdown("""
+    ## ⚡ Options
+    - **Start Date / End Date:** Defines the date range.
+    - **Interval:** Time step for the generated series:
+      - 5 min, 15 min, 30 min, or 1 hour.
+    - **Output Format:**
+      - *Date + Time in one column* → single combined string.
+      - *Date and Time in separate columns* → useful for load/PV models.
+
+    ## 🔄 How it Works
+    1. Select your start and end date.
+    2. Choose the time interval.
+    3. Pick the output format (one column vs. two columns).
+    4. Click **Generate Excel File**.
+    5. Download the ready-to-use Excel sheet.
+
+    ## 📊 Use Cases
+    - Create synthetic time-series templates.
+    - Build load or PV generation profiles.
+    - Feed into simulators (DC/AC coupled, financial models, etc.).
+    """)
+
+
+with st.expander("📖 Glossary & How-to", expanded=False):
+    st.markdown("""
+    ## ⚡ Options
+    - **Start Date / End Date:** Defines the date range.
+    - **Interval:** Time step for the generated series:
+      - 5 min, 15 min, 30 min, or 1 hour.
+    - **Output Format:**
+      - *Date + Time in one column* → single combined string.
+      - *Date and Time in separate columns* → useful for load/PV models.
+
+    ## 🔄 How it Works
+    1. Select your start and end date.
+    2. Choose the time interval.
+    3. Pick the output format (one column vs. two columns).
+    4. Click **Generate Excel File**.
+    5. Download the ready-to-use Excel sheet.
+
+    ## 📊 Use Cases
+    - Create synthetic time-series templates.
+    - Build load or PV generation profiles.
+    - Feed into simulators (DC/AC coupled, financial models, etc.).
+    """)
+
+
 # --- User Inputs ---
 start_date = st.date_input("Start Date")
 end_date = st.date_input("End Date")
