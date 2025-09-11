@@ -6,6 +6,34 @@ st.set_page_config(page_title="DateTime Excel Generator", layout="centered")
 
 st.title("📅 DateTime Excel Generator")
 
+# --- Sidebar Login ---
+with st.sidebar:
+    st.image("image.png", width=150)
+    st.header("🔒 Secure Login")
+
+    # Initialize session state
+    if "authenticated" not in st.session_state:
+        st.session_state.authenticated = False
+
+    # Login logic
+    if not st.session_state.authenticated:
+        password = st.text_input("Enter password", type="password")
+        if password == "pushpower123":
+            st.session_state.authenticated = True
+            st.success("✅ Logged in")
+            st.rerun()
+    else:
+        st.success("✅ Logged in")
+        if st.button("⏻ Logout"):
+            st.session_state.authenticated = False
+            st.rerun()
+
+# --- Access control ---
+if not st.session_state.authenticated:
+    st.warning("Please enter the correct password to access the app.")
+    st.stop()
+
+# --- Glossary & How-to ---
 with st.expander("📖 Glossary & How-to", expanded=False):
     st.markdown("""
     ## ⚡ Options
@@ -28,31 +56,6 @@ with st.expander("📖 Glossary & How-to", expanded=False):
     - Build load or PV generation profiles.
     - Feed into simulators (DC/AC coupled, financial models, etc.).
     """)
-
-
-with st.expander("📖 Glossary & How-to", expanded=False):
-    st.markdown("""
-    ## ⚡ Options
-    - **Start Date / End Date:** Defines the date range.
-    - **Interval:** Time step for the generated series:
-      - 5 min, 15 min, 30 min, or 1 hour.
-    - **Output Format:**
-      - *Date + Time in one column* → single combined string.
-      - *Date and Time in separate columns* → useful for load/PV models.
-
-    ## 🔄 How it Works
-    1. Select your start and end date.
-    2. Choose the time interval.
-    3. Pick the output format (one column vs. two columns).
-    4. Click **Generate Excel File**.
-    5. Download the ready-to-use Excel sheet.
-
-    ## 📊 Use Cases
-    - Create synthetic time-series templates.
-    - Build load or PV generation profiles.
-    - Feed into simulators (DC/AC coupled, financial models, etc.).
-    """)
-
 
 # --- User Inputs ---
 start_date = st.date_input("Start Date")
@@ -66,7 +69,7 @@ interval_options = {
 }
 interval = st.selectbox("Select Time Interval", list(interval_options.keys()))
 
-# New option for output format
+# Output format
 format_option = st.radio(
     "Select Output Format",
     ["Date + Time in one column", "Date and Time in separate columns"]
@@ -85,7 +88,7 @@ if st.button("Generate Excel File"):
                 freq=interval_options[interval]
             )
 
-            # Format DataFrame based on selection
+            # Format DataFrame
             if format_option == "Date + Time in one column":
                 df = pd.DataFrame({"DateTime": dt_range.strftime("%d/%m/%Y %H:%M")})
             else:
@@ -96,14 +99,23 @@ if st.button("Generate Excel File"):
 
             # Save to Excel in memory
             output = BytesIO()
-            with pd.ExcelWriter(output, engine="openpyxl") as writer:  # safer default
+            with pd.ExcelWriter(output, engine="openpyxl") as writer:
                 df.to_excel(writer, index=False, sheet_name="DateTime")
 
+            # Dynamic filename
+            file_name = f"datetime_{start_date}_{end_date}_{interval_options[interval]}.xlsx"
+
             st.success("✅ Excel file generated!")
+
+            # Preview table
+            st.write("🔍 Preview of generated data:")
+            st.dataframe(df.head(20))
+
+            # Download button
             st.download_button(
                 label="📥 Download Excel",
                 data=output.getvalue(),
-                file_name="datetime_list.xlsx",
+                file_name=file_name,
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
     else:
